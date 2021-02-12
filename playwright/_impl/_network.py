@@ -167,7 +167,7 @@ class Route(ChannelOwner):
             params["isBase64"] = True
             length = len(file_content)
 
-        headers = {k.lower(): str(v) for k, v in params.get("headers", {}).items()}
+        headers = {k.lower(): v for k, v in params.get("headers", {}).items()}
         if params.get("contentType"):
             headers["content-type"] = params["contentType"]
         elif path:
@@ -345,7 +345,7 @@ class WebSocket(ChannelOwner):
 
 
 def serialize_headers(headers: Dict[str, str]) -> List[Header]:
-    return [{"name": name, "value": value} for name, value in headers.items()]
+    return [{"name": name, "value": value} for name, values in headers.items() for value in ([str(value) for value in values] if type(values) in [list,set,tuple] else [str(values)])]
 
 
 def parse_headers(headers: List[Header]) -> Dict[str, str]:
